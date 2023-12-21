@@ -71,6 +71,9 @@ def main():
     ship1.blink_instance = ship1_blink
     ship2.blink_instance = ship2_blink
 
+    explosion1 = Explosion(center=ship1.rect.center)
+    explosion2 = Explosion(center=ship2.rect.center)
+
     tmr = 0
     clock = pg.time.Clock()
 
@@ -107,21 +110,22 @@ def main():
 
         # Inside the game loop
         collision = pg.sprite.collide_rect(ship1, ship2)
-
         if collision:
-            # Create an explosion at the center of each ship
-            explosion1 = Explosion(center=ship1.rect.center)
-            explosion2 = Explosion(center=ship2.rect.center)
             # Add the explosions to the explosions group
+            explosion1.rect.center = ship1.rect.center
+            explosion2.rect.center = ship2.rect.center
             explosions.add(explosion1, explosion2)
             # Kill both ships to remove them from the game
             ship1.kill()
             ship2.kill()
 
         for explosion in explosions:
-            explosion.update()
-            if explosion.frame_count > explosion.total_frames:
-                explosions.remove(explosion)
+                explosion.update()
+                if explosion.frame_count >= explosion.total_frames:
+                    explosion1.kill()
+                    explosion2.kill()
+                    if not ships:
+                        explosion.kill()
 
         ship1_blink.update(screen)
         ship2_blink.update(screen)

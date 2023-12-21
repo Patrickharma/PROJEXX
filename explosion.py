@@ -24,9 +24,9 @@ class Explosion(pg.sprite.Sprite):
             self.images.append(img)
 
     def update(self):
-        if self.frame_count < self.total_frames:
+        if self.frame_count < self.total_frames or self.current_frame < len(self.images) - 1:
             self.current_frame = (self.frame_count // 5) % len(self.images)
-            self.image = self.images[self.current_frame]
+            self.image = self.images[int(self.current_frame)]
             self.frame_count += 1
         else:
             self.kill()  # Kill the sprite after the animation
